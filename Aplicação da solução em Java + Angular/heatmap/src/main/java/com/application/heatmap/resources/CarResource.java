@@ -35,8 +35,7 @@ public class CarResource {
             return ResponseEntity.status(201).body(car);
         }catch(NoSuchElementException err){
             return ResponseEntity.status(404).body(new Car());
-        }
-       
+        } 
     }
     
     @PostMapping("/")
@@ -51,14 +50,14 @@ public class CarResource {
         return ResponseEntity.status(201).body(
                 carRepository.findById(id)
                     .map(car -> {
-                      car.setBrand(newCar.getBrand());
-                      car.setModel(newCar.getModel());
-                      car.setFabricationYear(newCar.getFabricationYear());
-                      car.setEngineLiters(newCar.getEngineLiters());
-                      car.setFuel(newCar.getFuel());
-                      car.setValuations(newCar.getValuations());
+                        car.setBrand(newCar.getBrand());
+                        car.setModel(newCar.getModel());
+                        car.setFabricationYear(newCar.getFabricationYear());
+                        car.setEngineLiters(newCar.getEngineLiters());
+                        car.setFuel(newCar.getFuel());
+                        car.setValuations(newCar.getValuations());
 
-                      return carRepository.save(car);
+                        return carRepository.save(car);
                     })
                     .orElseGet(() -> {
                       return carRepository.save(newCar);
@@ -68,15 +67,14 @@ public class CarResource {
     }
     
     @DeleteMapping("/{id}")
-    public ResponseEntity<Car> delete(@PathVariable Long id){
+    public ResponseEntity<String> delete(@PathVariable Long id){
         
-        try {
+        if(carRepository.existsById(id)){
            Car car = carRepository.findById(id).get();
            carRepository.delete(car);
-           return ResponseEntity.status(201).body(car);
-        } catch (Exception err) {
-            return ResponseEntity.status(404).body(new Car()); 
+           return ResponseEntity.status(201).body("Success Delete"); 
+        }else{
+            return ResponseEntity.status(404).body("ERR): Car for ID = " + id + "not found");
         }
-        
     }
 }

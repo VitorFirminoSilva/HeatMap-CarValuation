@@ -9,7 +9,9 @@ import javax.persistence.*;
 
 
 @Entity
-@Table(name = "car")
+@Table(name = "car", uniqueConstraints = {
+    @UniqueConstraint(name = "unique_carModel", columnNames = "model"),
+})
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Car implements Serializable{
     private static final long serialVersionUID = 1L;
@@ -18,27 +20,31 @@ public class Car implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @Column(name = "brand", nullable = false)
-    private String brand;
+    @OneToOne
+    @JoinColumn(name = "brand", nullable = false, referencedColumnName = "id")
+    private Brand brand;
     
-    @Column(name = "model", nullable = false)
+    @Column(nullable = false)
     private String model;
     
-    @Column(name = "fabricationYear", nullable = false)
+    @Column(nullable = false)
+    @Temporal(TemporalType.DATE)
     private Date fabricationYear;
     
-    @Column(name = "engineLiters", nullable = false)
+    @Column(nullable = false)
     private Double engineLiters;
     
-    @Column(name = "fuel", nullable = false)
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private FuelType fuel;
-    
-    @OneToMany(cascade = CascadeType.ALL)
+
+    //@()
+    @OneToMany(mappedBy = "car", cascade = CascadeType.ALL)
     private List<Valuation> valuations;
 
     public Car(){}
 
-    public Car(Long id, String brand, String model, Date fabricationYear, Double engineLiters, FuelType fuel, List<Valuation> valuations) {
+    public Car(Long id, Brand brand, String model, Date fabricationYear, Double engineLiters, FuelType fuel, List<Valuation> valuations) {
         this.id = id;
         this.brand = brand;
         this.model = model;
@@ -56,11 +62,11 @@ public class Car implements Serializable{
         this.id = id;
     }
 
-    public String getBrand() {
+    public Brand getBrand() {
         return brand;
     }
 
-    public void setBrand(String brand) {
+    public void setBrand(Brand brand) {
         this.brand = brand;
     }
 
@@ -103,13 +109,12 @@ public class Car implements Serializable{
     public void setValuations(List<Valuation> valuations) {
         this.valuations = valuations;
     }
-    
-    
 
     @Override
     public int hashCode() {
-        int hash = 7;
+        int hash = 5;
         hash = 89 * hash + Objects.hashCode(this.id);
+        hash = 89 * hash + Objects.hashCode(this.model);
         return hash;
     }
 
@@ -125,9 +130,13 @@ public class Car implements Serializable{
             return false;
         }
         final Car other = (Car) obj;
+        if (!Objects.equals(this.model, other.model)) {
+            return false;
+        }
         if (!Objects.equals(this.id, other.id)) {
             return false;
         }
         return true;
-    } 
+    }
+
 }

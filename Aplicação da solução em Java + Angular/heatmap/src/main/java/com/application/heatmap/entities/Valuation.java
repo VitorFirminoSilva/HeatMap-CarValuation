@@ -6,7 +6,9 @@ import java.util.Objects;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "carValuation")
+@Table(name = "carValuation", uniqueConstraints = {
+    @UniqueConstraint(name = "unique_valuationDate", columnNames = "dateValuation"),
+})
 public class Valuation implements Serializable{
     private static final long serialVersionUID = 1L;
     
@@ -15,17 +17,31 @@ public class Valuation implements Serializable{
     private Long id;
     
     @Column(name = "dateValuation", nullable = false)
+    @Temporal(TemporalType.DATE)
     private Date dateValuation;
     
     @Column(name = "value", nullable = false)
     private Double value;
     
+    @ManyToOne
+    @JoinColumn(name = "car", nullable = false, referencedColumnName = "id")
+    private Car car;
+    
     public Valuation(){}
 
-    public Valuation(Long id, Date dateValuation, Double value) {
+    public Valuation(Long id, Date dateValuation, Double value, Car car) {
         this.id = id;
         this.dateValuation = dateValuation;
         this.value = value;
+        this.car = car;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Date getDateValuation() {
@@ -42,6 +58,14 @@ public class Valuation implements Serializable{
 
     public void setValue(Double value) {
         this.value = value;
+    }
+
+    public Car getCar() {
+        return car;
+    }
+
+    public void setCar(Car car) {
+        this.car = car;
     }
 
     @Override
