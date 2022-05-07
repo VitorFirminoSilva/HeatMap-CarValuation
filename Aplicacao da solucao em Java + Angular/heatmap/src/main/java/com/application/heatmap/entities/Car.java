@@ -28,7 +28,7 @@ public class Car implements Serializable{
     private String model;
     
     @Column(nullable = false)
-    @Temporal(TemporalType.DATE)
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date fabricationYear;
     
     @Column(nullable = false)
@@ -38,7 +38,6 @@ public class Car implements Serializable{
     @Enumerated(EnumType.STRING)
     private FuelType fuel;
 
-    //@()
     @OneToMany(mappedBy = "car", cascade = CascadeType.ALL)
     private List<Valuation> valuations;
 
@@ -139,4 +138,8 @@ public class Car implements Serializable{
         return true;
     }
 
+    @Override
+    public String toString() {
+        return "Car{" + "brand=" + brand + ", model=" + model + ", fabricationYear=" + fabricationYear + ", engineLiters=" + engineLiters + ", fuel=" + fuel + ", valuations=" + valuations + '}';
+    }
 }

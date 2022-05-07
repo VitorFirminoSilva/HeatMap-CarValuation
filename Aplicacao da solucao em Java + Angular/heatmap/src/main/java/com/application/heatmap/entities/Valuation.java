@@ -1,28 +1,32 @@
 package com.application.heatmap.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "carValuation", uniqueConstraints = {
-    @UniqueConstraint(name = "unique_valuationDate", columnNames = "dateValuation"),
-})
+@Table(name = "carValuation")
 public class Valuation implements Serializable{
     private static final long serialVersionUID = 1L;
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     @Column(name = "dateValuation", nullable = false)
-    @Temporal(TemporalType.DATE)
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date dateValuation;
     
     @Column(name = "value", nullable = false)
     private Double value;
-    
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @ManyToOne
     @JoinColumn(name = "car", nullable = false, referencedColumnName = "id")
     private Car car;
@@ -60,6 +64,7 @@ public class Valuation implements Serializable{
         this.value = value;
     }
 
+    @JsonIgnore
     public Car getCar() {
         return car;
     }
@@ -92,4 +97,28 @@ public class Valuation implements Serializable{
         }
         return true;
     }  
+
+    @Override
+    public String toString() {
+        return "Valuation{dateValuation=" + dateValuation + ", value=" + value + ", car=" + car + '}';
+    }
+ 
+    public Integer findGreaterYear(List<Valuation> valuations){
+        int greaterYear = 0;
+        int tempYear;
+        Calendar cal = Calendar.getInstance();
+
+        for (Valuation valuation : valuations) {
+            cal.setTime(valuation.getDateValuation());
+            tempYear = cal.get(Calendar.YEAR);
+            
+            if(tempYear > greaterYear){
+                greaterYear = tempYear;
+            } 
+        }
+
+        return greaterYear;
+    }
+ 
+
 }

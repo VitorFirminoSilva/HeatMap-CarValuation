@@ -1,9 +1,15 @@
 package com.application.heatmap.resources;
 
 import com.application.heatmap.entities.Valuation;
+import com.application.heatmap.repositories.CarRepository;
 import com.application.heatmap.repositories.ValuationRepository;
+import com.application.heatmap.util.InvalidRangeDate;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.TimeZone;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,6 +28,9 @@ public class ValuationResource {
     @Autowired
     private ValuationRepository valuationRepository;
     
+    @Autowired
+    private CarRepository carRepository;
+    
     @GetMapping
     public ResponseEntity<List<Valuation>> findAll() {
         List<Valuation> valuations = valuationRepository.findAll();
@@ -38,10 +47,42 @@ public class ValuationResource {
         } 
     }
     
-    @PostMapping("/")
-    public ResponseEntity<Valuation> create(@RequestBody Valuation valuation){
-        valuationRepository.save(valuation);
-        return ResponseEntity.status(201).body(valuation);
+    @PostMapping()
+    public ResponseEntity<String> create(@RequestBody Valuation valuation){
+
+        
+        
+        Calendar cal = Calendar.getInstance();
+        int tempYear;
+        int bdYear;
+        try{
+            if(carRepository.existsById(valuation.getCar().getId())){
+                List<Valuation> temp = carRepository.findById(valuation.getCar().getId()).get().getValuations();
+            
+                cal.setTime(valuation.getDateValuation());
+                tempYear = cal.get(Calendar.YEAR);
+
+                bdYear = valuation.findGreaterYear(temp);
+                
+                System.out.println(tempYear + " >= " + bdYear);
+              
+                if(bdYear <= tempYear){
+                    valuationRepository.save(valuation);
+                    return ResponseEntity.status(201).body("Success in create valuation"); 
+                }else{
+                    throw new InvalidRangeDate("Your Date must be greater than " + bdYear);
+                }
+            }else{
+               throw new Exception();
+            }
+        }catch(Exception ex){
+            if(ex instanceof InvalidRangeDate){
+                return ResponseEntity.status(401).body("Erro in create valuation - " + ex.getMessage()); 
+            }
+
+         
+            return ResponseEntity.status(500).body("Erro - unhandled error (" + ex.getMessage() + ")"); 
+        }
     }
     
     @PutMapping("/{id}")

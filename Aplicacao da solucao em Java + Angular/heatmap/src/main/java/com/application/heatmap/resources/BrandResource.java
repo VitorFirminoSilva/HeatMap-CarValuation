@@ -4,6 +4,7 @@ import com.application.heatmap.entities.Brand;
 import com.application.heatmap.repositories.BrandRepository;
 import java.util.List;
 import java.util.NoSuchElementException;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -38,10 +39,19 @@ public class BrandResource {
         } 
     }
     
-    @PostMapping("/")
-    public ResponseEntity<Brand> create(@RequestBody Brand brand){
-        brandRepository.save(brand);
-        return ResponseEntity.status(201).body(brand);
+    @PostMapping
+    public ResponseEntity<String> create(@RequestBody Brand brand){
+        try{
+            brandRepository.save(brand);
+            return ResponseEntity.status(201).body("Success in create brand");
+        }catch(Exception ex){
+            
+            if(ex instanceof ConstraintViolationException){
+                return ResponseEntity.status(401).body("Erro in create brand - name duplicate"); 
+            }
+            
+            return ResponseEntity.status(500).body("Erro - unhandled error (" + ex.getMessage() + ")"); 
+        }
     }
     
     @PutMapping("/{id}")

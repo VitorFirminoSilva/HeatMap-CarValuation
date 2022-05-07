@@ -4,6 +4,7 @@ import com.application.heatmap.entities.Car;
 import com.application.heatmap.repositories.CarRepository;
 import java.util.List;
 import java.util.NoSuchElementException;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,7 +26,7 @@ public class CarResource {
     @GetMapping
     public ResponseEntity<List<Car>> findAll() {
         List<Car> cars = carRepository.findAll();
-        return ResponseEntity.ok().body(cars);
+        return ResponseEntity.status(201).body(cars);
     }
 
     @GetMapping("/{id}")
@@ -38,10 +39,19 @@ public class CarResource {
         } 
     }
     
-    @PostMapping("/")
-    public ResponseEntity<Car> create(@RequestBody Car car){
-        carRepository.save(car);
-        return ResponseEntity.status(201).body(car);
+    @PostMapping
+    public ResponseEntity<String> create(@RequestBody Car car){
+        try{
+            carRepository.save(car);
+            return ResponseEntity.status(201).body("Success in create car");
+        }catch(Exception ex){
+ 
+            if(ex instanceof ConstraintViolationException){
+                return ResponseEntity.status(401).body("Erro in create car - name duplicate"); 
+            }
+            
+            return ResponseEntity.status(500).body("Erro - unhandled error (" + ex.getMessage() + ")"); 
+        }
     }
     
     @PutMapping("/{id}")
