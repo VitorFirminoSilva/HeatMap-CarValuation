@@ -1,0 +1,181 @@
+:root {
+    --mondrian-black: #010302;
+    --mondrian-white: #FFF5FB;
+    --mondrian-blue: #257CC1;
+    --mondrian-red: #FC0002;
+    --mondrian-yellow: #FEEE1F;
+
+    --mondrian-block-size: 52px;
+    --mondrian-border-width: 6px;
+
+    --mondrian-font-family: 'Nunito', sans-serif;
+
+    --radio-checkbox-size: 1.5rem;
+    --spacing: 1.5rem;
+
+    --mondrian-max-width: 1240px;
+    --mondrian-max-height: 680px ;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    font-family: var(--mondrian-font-family);
+    line-height: 1.5;
+    font-size: 100%;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    max-width: 1020px;
+    margin: 0 auto;
+}
+
+@media (min-width: 600px) {
+    main {
+        flex-direction: row;
+        justify-content: center;
+    }
+}
+
+
+
+.content {
+    display: flex;
+    flex-direction: column;
+}
+
+.mondrian {
+    display: grid;
+    grid-auto-columns: var(--mondrian-block-size);
+    grid-auto-rows: var(--mondrian-block-size);
+    grid-auto-flow: dense;
+    grid-gap: var(--mondrian-border-width);
+    grid-template-columns: repeat(auto-fit, minmax(var(--mondrian-block-size), 1fr));
+    grid-template-rows: repeat(auto-fit, minmax(var(--mondrian-block-size), 1fr));
+    background-color: var(--mondrian-black);
+    border: var(--mondrian-border-width) solid var(--mondrian-black);
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.mondrian.mondrian--large {
+    max-height: 480px;
+    max-width: 480px;
+    transition:all 1s;
+}
+
+
+// Scree Large //
+@media (min-width: 680px) {
+    .mondrian.mondrian--large {
+        max-height: 420px;
+        max-width: 680px;
+    }
+}
+
+@media (min-width: 920px) {
+    .mondrian.mondrian--large {
+        max-height: 520px;
+        max-width: 780px;
+    }
+}
+
+@media (min-width: 1080px) {
+    .mondrian.mondrian--large {
+        max-height: 620px;
+        max-width: 980px;
+    }
+}
+
+@media (min-width: 1280px) {
+    .mondrian.mondrian--large {
+        max-height: 820px;
+        max-width: 1080px;
+    }
+}
+// //
+
+// Cellphone
+@media (min-height: 400px) {
+    .mondrian.mondrian--large {
+        max-height: 340px;
+    }
+}
+
+@media (min-height: 660px) {
+    .mondrian.mondrian--large {
+        max-height: 520px;
+    }
+}
+
+@media (min-height: 820px) {
+    .mondrian.mondrian--large {
+        max-height: 740px;
+    }
+}
+
+// //
+
+.span-1 {
+    grid-column: span 1;
+}
+
+.span-2 {
+    grid-column: span 2;
+}
+
+.span-3 {
+    grid-column: span 3;
+}
+
+.span-4 {
+    grid-column: span 4;
+}
+
+.span-5 {
+    grid-column: span 5;
+}
+
+.row-1 {
+    grid-row: span 1;
+}
+
+.row-2 {
+    grid-row: span 2;
+}
+
+.row-3 {
+    grid-row: span 3;
+}
+
+.row-4 {
+    grid-row: span 4;
+}
+
+.row-5 {
+    grid-row: span 5;
+}
+
+.color-black {
+    background-color: var(--mondrian-black);
+}
+
+.color-white {
+    background-color: var(--mondrian-white);
+}
+
+.color-blue {
+    background-color: var(--mondrian-blue);
+}
+
+.color-red {
+    background-color: var(--mondrian-red);
+}
+
+.color-yellow {
+    background-color: var(--mondrian-yellow);
+}
