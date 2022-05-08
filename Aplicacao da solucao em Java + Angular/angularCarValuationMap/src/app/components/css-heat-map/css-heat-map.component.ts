@@ -4,6 +4,9 @@ import { AccessApiService } from 'src/app/services/access-api.service';
 interface ValueCarChange {
     span: number;
     row: number;
+    colorHSL: string;
+    porcentage: number;
+    idCar: number;
 }
 
 @Component({
@@ -18,39 +21,7 @@ export class CssHeatMapComponent implements OnInit, OnChanges {
     public carValues: ValueCarChange[] = [];
 
     public size: string = 'large';
-    public theme: string = 'default';
-    private sizes: Array<string> = ['small', 'medium', 'large'];
-    private themes: Array<{ name: string, colors: Array<string> }> = [
-        {
-            name: 'default',
-            colors: [
-                'black',
-                'red',
-                'blue',
-                'yellow',
-                'white',
-                'white',
-                'white'
-            ]
-        },
-        {
-            name: 'blue',
-            colors: [
-                'black',
-                'blue',
-                'blue',
-                'white',
-                'white',
-                'white',
-                'white',
-                'white'
-            ]
-        },
-    ];
 
-    /**
-     * Initialize a mondrian.
-     */
     constructor(private accessApi : AccessApiService) {
     }
 
@@ -64,31 +35,13 @@ export class CssHeatMapComponent implements OnInit, OnChanges {
         console.log(this.carList);
     }
 
-    ngAfterContentInit(){
-        
-    }
 
-    ngAfterViewChecked(){
-       
-    }
-
-    ngAfterViewInit() {
-        
-    }
-
-    /**
-     * Create a mondrian in targetElement.
-     */
     public draw() {
         const targetElement: HTMLElement = document.getElementById("mondrian-wrapper")!;
         const painting: string = `<div class="mondrian mondrian--${this.size}">${this.generateCells()}</div>`;
-
         targetElement.insertAdjacentHTML('beforeend', painting);
     }
 
-    /**
-     * Remove the mondrian and create a new one.
-     */
     public redraw() {
         const element: HTMLElement = document.querySelector('.mondrian')!;
         element.parentNode!.removeChild(element);
@@ -96,47 +49,31 @@ export class CssHeatMapComponent implements OnInit, OnChanges {
         this.draw();
     }
 
-    /**
-     * Set size option
-     */
-    public setSize(size: string) {
-        if (this.sizes.includes(size)) {
-            this.size = size;
-        }
-    }
-
-    /**
-     * Set theme option
-     */
-    public setTheme(theme: string) {
-        if (this.themes.some(obj => obj.name === theme)) {
-            this.theme = theme;
-        }
-    }
-
-    /**
-     * Generate the colored dom elements for the Mondrian based on the theme colors.
-     */
     private generateCells() {
         let cells: string = ``;
-        const selectedTheme: { name: string, colors: Array<string> } = this.themes.find(obj => obj.name === this.theme)!;
+
         for (let i = 0; i < this.carValues.length; i++) {
+            let idCar: number = this.carValues[i].idCar;
             let span: number = this.carValues[i].span;
             let row: number = this.carValues[i].row;
-            let colorIndex: number = this.randInt(1, selectedTheme.colors.length);
-            cells += `<div class="span-${span} row-${row} color-${selectedTheme.colors[colorIndex]}"></div>`
+            let colorIndex: string = this.carValues[i].colorHSL;
+            cells += `<div class="centerText span-${span} row-${row}" style="background-color:${colorIndex};">
+                <p class="car">${this.carList[idCar].model}<br>${this.carValues[i].porcentage.toFixed(2)}</p>
+            </div>`
         }
 
         return cells;
     }
 
-    /**
-     * Get random int
-     */
-    private randInt(min: number, max: number): number {
-        return Math.floor(Math.random() * (max - min) + min);
+    private orderASC(){
+        this.carValues.sort((a,b) => a.porcentage > b.porcentage ? -1 : 1);
+        this.redraw();
     }
 
+    private orderDESC(){
+        this.carValues.sort((a,b) => a.porcentage > b.porcentage ? 1 : -1);
+        this.redraw();
+    }
 
     private getCarList(){
         this.accessApi.getListCars().subscribe(
@@ -153,8 +90,6 @@ export class CssHeatMapComponent implements OnInit, OnChanges {
     private changeValues(){
         const promise = new Promise<void>((resolve, reject) => {
             setTimeout(() => {
-                let i: number = 0;
-                console.log("Entrei");
                 for (let i = 0; i < this.carList.length; i++) {
                     const element = this.carList[i];
                     const value = element.valuations[0].value;
@@ -162,24 +97,23 @@ export class CssHeatMapComponent implements OnInit, OnChanges {
 
                     const calc = value - value2;
 
-                    console.log(calc);
+                    this.carValues[i] = { "span": 0, "row": 0, "colorHSL": "", "porcentage": 0.0, "idCar": i };
 
                     if(value > 10000.0 && value <= 25000.0){
-                        this.carValues[i] = { "span": 2, "row": 0};
+                        this.carValues[i].span = 2;
                     }
                     else if(value > 25000.0 && value <= 40000.0){
-                        this.carValues[i] = { "span": 3, "row": 0};
+                        this.carValues[i].span = 3;
                     }
                     else if(value > 40000.0 && value <= 55000.0){
-                        this.carValues[i] = { "span": 4, "row": 0};
+                        this.carValues[i].span = 4;
                     }
                     else if(value > 55000.0){
-                        this.carValues[i] = { "span": 5, "row": 0};
+                        this.carValues[i].span = 5;
                     }
                     else{
-                        this.carValues[i] = { "span": 1, "row": 0}; 
+                        this.carValues[i].span = 1; 
                     }
-
 
                     if(calc > 1000.0 && calc <= 2500.0){
                         this.carValues[i].row = 2;
@@ -195,10 +129,36 @@ export class CssHeatMapComponent implements OnInit, OnChanges {
                     }
                     else{
                         this.carValues[i].row = 1 ; 
-                    }  
-                }
+                    } 
+                    
+                    const temp = ((value - value2) / value2) * 100;
+                    this.carValues[i].porcentage = temp;
+                    let brt = 50;
+                    const tempAbs = Math.abs(temp);
 
-                console.log(this.carValues);
+                    if(tempAbs > 20.0){
+                        brt = 45  ;
+                    }
+                    else if(tempAbs < 15){
+                        brt = 60;
+                    }
+                    else if(tempAbs < 10){
+                        brt = 70
+                    }
+                    else if(tempAbs < 5){
+                        brt = 80;
+                    }
+                    else{
+                        brt = 100;
+                    }
+
+                    if(value > value2){
+                        this.carValues[i].colorHSL = `hsl(100, 100%, ${brt}%)`;
+                    }
+                    else{
+                        this.carValues[i].colorHSL = `hsl(1, 100%, ${brt}%)`;
+                    }
+                }
                 this.draw();
             }, 1500);
             
