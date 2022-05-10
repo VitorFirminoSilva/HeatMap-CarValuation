@@ -1,5 +1,6 @@
 import { Component, OnChanges, OnInit, ViewEncapsulation } from '@angular/core';
-import { AccessApiService } from 'src/app/services/access-api.service';
+import { AccessApiService } from '../../services/access-api.service';
+import { ModalComponent } from '../modal/modal.component';
 
 interface ValueCarChange {
     span: number;
@@ -22,7 +23,7 @@ export class CssHeatMapComponent implements OnInit, OnChanges {
 
     public size: string = 'large';
 
-    constructor(private accessApi : AccessApiService) {
+    constructor(private accessApi : AccessApiService, private modalComp: ModalComponent) {
     }
 
 

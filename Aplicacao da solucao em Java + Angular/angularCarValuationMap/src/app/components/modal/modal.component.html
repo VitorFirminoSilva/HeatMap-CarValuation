@@ -1,0 +1,10 @@
+<ng-container *ngIf="show">
+    <div class="modal" @modal>
+        <div class="header">
+            <h2>{{title}}</h2>
+            <button (click)="toggle()" class="close">x</button>
+        </div>
+        <ng-content></ng-content>
+    </div>
+    <div @overlay class="overlay"></div>
+</ng-container>

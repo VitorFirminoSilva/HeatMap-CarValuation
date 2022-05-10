@@ -1,0 +1,35 @@
+<ion-header translucent>
+  <ion-toolbar>
+    <ion-title>Add New Brand</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismissModal()">Close</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <form [formGroup]="form" (ngSubmit)="submitForm()">
+    
+    <ion-item>
+      <ion-label position="floating">Brand Name</ion-label>
+      <ion-input type="text" formControlName="brandName" ngDefaultControl></ion-input>
+    </ion-item>
+    <span
+      *ngIf="(form.get('brandName').dirty || form.get('brandName').touched) && form.controls.brandName.errors?.required">
+      Brand Name is required.
+    </span>
+
+    <ion-item>
+      <ion-label position="floating">Description</ion-label>
+      <ion-input type="text" formControlName="description" ngDefaultControl></ion-input>
+    </ion-item>
+    <span
+
+      *ngIf="(form.get('description').dirty || form.get('description').touched) && form.controls.description.errors?.required">
+      Description is required.
+    </span>
+
+    <ion-button expand="block" color="primary" type="submit" >Save</ion-button>
+  </form>
+</ion-content>

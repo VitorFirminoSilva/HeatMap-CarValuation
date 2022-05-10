@@ -74,3 +74,6 @@ testem.log
 .DS_Store
 Thumbs.db
 db.json
+
+#Code Applications Test
+ionicApplicationMap/
