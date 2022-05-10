@@ -4,12 +4,10 @@ import com.application.heatmap.entities.Valuation;
 import com.application.heatmap.repositories.CarRepository;
 import com.application.heatmap.repositories.ValuationRepository;
 import com.application.heatmap.util.InvalidRangeDate;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.TimeZone;
-import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:8100")
 @RequestMapping("/valuations")
 public class ValuationResource {
     
@@ -46,12 +45,10 @@ public class ValuationResource {
             return ResponseEntity.status(404).body(new Valuation());
         } 
     }
-    
+ 
     @PostMapping()
     public ResponseEntity<String> create(@RequestBody Valuation valuation){
-
-        
-        
+     
         Calendar cal = Calendar.getInstance();
         int tempYear;
         int bdYear;
@@ -68,7 +65,7 @@ public class ValuationResource {
               
                 if(bdYear <= tempYear){
                     valuationRepository.save(valuation);
-                    return ResponseEntity.status(201).body("Success in create valuation"); 
+                    return ResponseEntity.ok().body("Success in create valuation"); 
                 }else{
                     throw new InvalidRangeDate("Your Date must be greater than " + bdYear);
                 }

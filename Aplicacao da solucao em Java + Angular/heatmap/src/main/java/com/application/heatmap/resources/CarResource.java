@@ -7,6 +7,7 @@ import java.util.NoSuchElementException;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:8100")
 @RequestMapping("/cars")
 public class CarResource {
     
@@ -26,7 +28,7 @@ public class CarResource {
     @GetMapping
     public ResponseEntity<List<Car>> findAll() {
         List<Car> cars = carRepository.findAll();
-        return ResponseEntity.status(201).body(cars);
+        return ResponseEntity.ok().body(cars);
     }
 
     @GetMapping("/{id}")
@@ -43,7 +45,7 @@ public class CarResource {
     public ResponseEntity<String> create(@RequestBody Car car){
         try{
             carRepository.save(car);
-            return ResponseEntity.status(201).body("Success in create car");
+            return ResponseEntity.ok().body("Success in create car");
         }catch(Exception ex){
  
             if(ex instanceof ConstraintViolationException){
@@ -57,7 +59,7 @@ public class CarResource {
     @PutMapping("/{id}")
     public ResponseEntity<Car> edit(@RequestBody Car newCar, @PathVariable Long id){
         
-        return ResponseEntity.status(201).body(
+        return ResponseEntity.ok().body(
                 carRepository.findById(id)
                     .map(car -> {
                         car.setBrand(newCar.getBrand());
