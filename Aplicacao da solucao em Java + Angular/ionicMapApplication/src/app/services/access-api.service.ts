@@ -26,15 +26,6 @@ interface Car{
   valuations?: {};
 }
 
-interface CarNotValuations{
-  id?:number;
-  brand?: Brand;
-  model?: string;
-  fabricationYear?: Date;
-  engineLiters?: number;
-  fuel?: string;
-}
-
 @Injectable({
   providedIn: 'root'
 })
@@ -45,7 +36,7 @@ export class AccessApiService {
   public async getListCars() {
     return new Promise(resolve => {
       setTimeout(() => {
-        this.http.get(`${environment.serverUrl}/cars`).subscribe(
+        this.http.get(`${environment.serverUrl}/cars?_embed=valuations`).subscribe(
           (data: any) => {     
             resolve(data);
           },

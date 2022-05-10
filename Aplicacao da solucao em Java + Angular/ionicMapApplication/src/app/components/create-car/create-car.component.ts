@@ -1,7 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, ContentChildren, Input, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AlertController, LoadingController, ModalController } from '@ionic/angular';
 import { AccessApiService } from 'src/app/services/access-api.service';
+import { MondrianMapComponent } from '../mondrian-map/mondrian-map.component';
 
 interface Brand{
   id?: number;
@@ -24,14 +26,6 @@ interface Car{
   valuations?: {};
 }
 
-interface CarNotValuations{
-  brand?: Brand;
-  model?: string;
-  fabricationYear?: Date;
-  engineLiters?: number;
-  fuel?: string;
-}
-
 @Component({
   selector: 'app-create-car',
   templateUrl: './create-car.component.html',
@@ -45,7 +39,8 @@ export class CreateCarComponent implements OnInit {
   @Input() modalController: ModalController;
   @Input() brandList: any[];
 
-  constructor(  private formBuilder: FormBuilder, 
+  constructor(  private router: Router,
+                private formBuilder: FormBuilder, 
                 public alertController: AlertController,
                 public accessApi: AccessApiService, private loadingCtrl: LoadingController ) { 
     this.form = this.formBuilder.group({
@@ -98,25 +93,27 @@ export class CreateCarComponent implements OnInit {
     car.fuel = "GASOLINE";
     car.model = this.form.value.model;
 
-    await this.accessApi.createCar(car);
-    this.cars = await this.accessApi.getListCars();
+    //await this.accessApi.createCar(car);
+    //this.cars = await this.accessApi.getListCars();
 
-    console.log(this.cars);
-    const carTemp: CarNotValuations = await this.cars.filter(element => { return  (element.model === car.model)}); 
+    //const carTemp: CarNotValuations = await this.cars.filter(element => { return  (element.model === car.model)}); 
 
+    //val1.car  = carTemp[0];
+    //val2.car  = carTemp[0];
 
-    console.log(carTemp);
-    val1.car  = carTemp[0];
-    val2.car  = carTemp[0];
-
-    console.log(val1);
-    console.log(val2);
-    await this.accessApi.createValuation(val1);
-    await this.accessApi.createValuation(val2);
+    //await this.accessApi.createValuation(val1);
+    //await this.accessApi.createValuation(val2);
 
     await loading.dismiss();
+    this.reloadCurrentRoute();
     this.dismissModal();
   }
+
+  reloadCurrentRoute() {
+    this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
+        this.router.navigate(["/home"]);
+    });
+}
 
   async presentAlert(msg: string, type: string) {
     const alert = await this.alertController.create({

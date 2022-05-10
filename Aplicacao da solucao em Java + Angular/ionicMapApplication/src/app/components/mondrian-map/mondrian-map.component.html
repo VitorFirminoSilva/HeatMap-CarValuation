@@ -1,5 +1,17 @@
-<main>
+<main *ngIf="carValues != null && carList != null">
   <div>
-      <div id="mondrian-wrapper"></div> 
-  </div>
+      <ion-item id="mondrian-wrapper">
+          <div class="mondrian mondrian--large">
+            <div tappable (click)="clickHandler(this.carList[carValue.ident].id);"  *ngFor="let carValue of filterCarValues()" [ngClass]="'centerText span-' + carValue.span + ' row-' + carValue.row" [style.background-color]="carValue.colorHSL">
+              <div >
+                <p class="car">
+                  {{this.carList[carValue.ident].model}}
+                  <br>{{carValue.porcentage.toFixed(2)}}
+                </p>
+              </div>
+            </div>
+          </div>
+      </ion-item> 
+  </div>  
 </main>
+

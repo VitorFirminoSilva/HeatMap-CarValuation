@@ -12,6 +12,7 @@ import { CreateCarComponent } from '../create-car/create-car.component';
 export class MenubarComponent implements OnInit {
 
   private brands = {} as any;
+  
 
   constructor(private modalController: ModalController, private accessApi: AccessApiService) { }
 

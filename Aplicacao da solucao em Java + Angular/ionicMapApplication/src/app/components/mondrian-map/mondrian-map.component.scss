@@ -2,10 +2,10 @@
     --mondrian-black: #010302;
     --mondrian-white: #FFF5FB;
 
-    --mondrian-block-size: 60px;
+    --mondrian-block-size: 25px;
 
     @media (min-width: 780px) {
-        --mondrian-block-size: 100px; 
+        --mondrian-block-size: 70px; 
     }
     --mondrian-border-width: 2px;
 
@@ -65,7 +65,7 @@ main {
 }
 
 .mondrian.mondrian--large {
-    max-height: 480px;
+    max-height: 100vh;
     max-width: 480px;
     transition:all 1s;
 }
@@ -74,54 +74,27 @@ main {
 // Screem Large //
 @media (min-width: 680px) {
     .mondrian.mondrian--large {
-        max-height: 420px;
         max-width: 680px;
     }
 }
 
 @media (min-width: 920px) {
     .mondrian.mondrian--large {
-        max-height: 520px;
         max-width: 780px;
     }
 }
 
 @media (min-width: 1080px) {
     .mondrian.mondrian--large {
-        max-height: 620px;
         max-width: 980px;
     }
 }
 
 @media (min-width: 1280px) {
     .mondrian.mondrian--large {
-        max-height: 820px;
         max-width: 1080px;
     }
 }
-// //
-
-// Cellphone
-@media (min-height: 400px) {
-    .mondrian.mondrian--large {
-        max-height: 340px;
-    }
-}
-
-@media (min-height: 660px) {
-    .mondrian.mondrian--large {
-        max-height: 520px;
-    }
-}
-
-@media (min-height: 820px) {
-    .mondrian.mondrian--large {
-        max-height: 740px;
-    }
-}
-
-// //
-
 .span-1 {
     grid-column: span 1;
 }
@@ -162,8 +135,50 @@ main {
     grid-row: span 5;
 }
 
+
+@media (max-width: 400px) {
+
+    .span-3 {
+        grid-column: span 2;
+    }
+    
+    .span-4 {
+        grid-column: span 2;
+    }
+    
+    .span-5 {
+        grid-column: span 2;
+    }
+
+    .row-3 {
+        grid-row: span 2;
+    }
+    
+    .row-4 {
+        grid-row: span 2;
+    }
+    
+    .row-5 {
+        grid-row: span 2;
+    }
+}
+
 .centerText{
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.centerText:hover{
+    background-color: #010302;
+    opacity: 0.8;
+}
+
+#btn-label{
+    border: 1px solid red;
+    background-color: blue;
+}
+
+.car{
+    text-align: center;
 }
