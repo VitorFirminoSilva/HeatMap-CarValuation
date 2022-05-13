@@ -5,9 +5,7 @@ import java.util.Objects;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "brand", uniqueConstraints = {
-    @UniqueConstraint(name = "unique_brand", columnNames = "brandName"),
-})
+@Table(name = "brand")
 public class Brand implements Serializable{
     private static final long serialVersionUID = 1L;
     
@@ -15,7 +13,7 @@ public class Brand implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @Column(nullable = false, length = 60)
+    @Column(unique = true, nullable = false, length = 60)
     private String brandName;
     
     @Column(nullable = false, length = 2000)
