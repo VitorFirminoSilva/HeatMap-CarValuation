@@ -1,5 +1,5 @@
 import { HttpClient, HttpHandler } from '@angular/common/http';
-import { Component, Injectable, OnChanges, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Injectable, Input, OnChanges, OnInit, Output, SimpleChanges, ViewEncapsulation, EventEmitter } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController, LoadingController } from '@ionic/angular';
 import { AccessApiService } from 'src/app/services/access-api.service';
@@ -18,22 +18,26 @@ interface ValueCarChange {
     styleUrls: ['./mondrian-map.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class MondrianMapComponent implements OnInit {
+export class MondrianMapComponent implements OnInit, OnChanges {
 
-    public carList = {} as any;
+    @Input() public carList = [];
+    @Output() eventEmitter = new EventEmitter<any>();
+    
     public carValues: ValueCarChange[] = [];
 
-    
-    
-
-    constructor(private accessApi: AccessApiService, 
-                private loadingCtrl: LoadingController, 
+    constructor(private loadingCtrl: LoadingController, 
                 private alertController: AlertController,
             ) {
     }
 
     ngOnInit() {
+        this.carValues = [];
         this.getCarGenerateList();
+    }
+
+
+    ngOnChanges(changes: SimpleChanges): void {
+        this.ngOnInit();
     }
 
     public filterCarValues(){
@@ -41,25 +45,26 @@ export class MondrianMapComponent implements OnInit {
     }
 
     public async clickHandler(id: number){
-        await this.presentAlert(id);
+        this.eventEmitter.emit(this.carList[id]);
     }
 
     private async getCarGenerateList() {
-        const loading = await this.loadingCtrl.create({
-            message: "Get Data...",
-        });
+        if(this.carList.length > 0){
+            const loading = await this.loadingCtrl.create({
+                message: "Generate Values...",
+            });
 
-        await loading.present();
-        this.carList = await this.accessApi.getListCars();
+            await loading.present();
+        
+            let i: number = 0;
 
-        let i: number = 0;
-        await this.carList.forEach(() => {
-            this.carValues[i] = { "span": 0, "row": 0, "colorHSL": "", "porcentage": 0.0, "ident": -1 };
-            i++;
-        })
-        await this.changeValues();
-
-        loading.dismiss();
+            this.carList.forEach(() => {
+                this.carValues[i] = { "span": 0, "row": 0, "colorHSL": "", "porcentage": 0.0, "ident": -1 };
+                i++;
+            })
+            await this.changeValues();
+            loading.dismiss();
+        }
     }
 
     private async changeValues() {
@@ -139,26 +144,4 @@ export class MondrianMapComponent implements OnInit {
             }
         }
     }
-
-    async presentAlert(id: number) {
-        const alert = await this.alertController.create({
-          header: 'Delete Component in HeatMap',
-          buttons: [ {
-                text: 'Cancel',
-                role: 'cancel',
-                cssClass: 'secondary',
-                id: 'cancel-button',
-                }, {
-                    text: 'Delete',
-                    id: 'confirm-button',
-                    handler: async () => {
-                        await this.accessApi.deleteCar(id);
-                        this.ngOnInit();
-                    }
-                }
-            ]
-        });
-    
-        await alert.present();
-      }
 }

@@ -1,8 +1,8 @@
 <main *ngIf="carValues != null && carList != null">
   <div>
       <ion-item id="mondrian-wrapper">
-          <div class="mondrian mondrian--large">
-            <div tappable (click)="clickHandler(this.carList[carValue.ident].id);"  *ngFor="let carValue of filterCarValues()" [ngClass]="'centerText span-' + carValue.span + ' row-' + carValue.row" [style.background-color]="carValue.colorHSL">
+          <div  *ngIf="this.carList.length > 0" class="mondrian mondrian--large">
+            <div tappable (click)="clickHandler(carValue.ident);"  *ngFor="let carValue of filterCarValues()" [ngClass]="'centerText span-' + carValue.span + ' row-' + carValue.row" [style.background-color]="carValue.colorHSL">
               <div >
                 <p class="car">
                   {{this.carList[carValue.ident].model}}
