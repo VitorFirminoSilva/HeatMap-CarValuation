@@ -4,8 +4,10 @@ import com.application.heatmap.entities.Brand;
 import com.application.heatmap.repositories.BrandRepository;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Service
 public class BrandService {
     final BrandRepository brandRepository;
     

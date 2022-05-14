@@ -3,16 +3,17 @@ package com.application.heatmap.dtos;
 import com.application.heatmap.entities.Car;
 import java.time.LocalDateTime;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 public class ValuationDTO {
     
-    @NotBlank
+    @NotNull
     private LocalDateTime dateValuation;
     
-    @NotBlank
+    @NotNull
     private Double value;
 
-    @NotBlank
+    @NotNull
     private Car car;
 
     public LocalDateTime getDateValuation() {

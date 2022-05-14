@@ -4,8 +4,10 @@ import com.application.heatmap.entities.Valuation;
 import com.application.heatmap.repositories.ValuationRepository;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Service
 public class ValuationService {
     
     final ValuationRepository valuationRepository;

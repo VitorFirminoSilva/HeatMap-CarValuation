@@ -27,7 +27,6 @@ public class Car implements Serializable{
     private String model;
     
     @Column(nullable = false)
-    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private LocalDateTime fabricationYear;
        
     @Column(nullable = false)

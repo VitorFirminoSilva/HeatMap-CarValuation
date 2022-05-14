@@ -6,7 +6,7 @@ import javax.validation.constraints.Size;
 public class BrandDTO {
    
     @NotBlank
-    @Size(min=3, max=60)
+    @Size(min=2, max=60)
     private String brandName;
     
     @NotBlank

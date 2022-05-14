@@ -17,7 +17,6 @@ public class Valuation implements Serializable{
     private Long id;
 
     @Column(name = "dateValuation", nullable = false)
-    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private LocalDateTime dateValuation;
     
     @Column(name = "value", nullable = false)

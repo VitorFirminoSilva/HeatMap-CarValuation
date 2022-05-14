@@ -6,22 +6,23 @@ import com.application.heatmap.entities.Valuation;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 public class CarDTO {
     
-    @NotBlank
+    @NotNull
     private Brand brand;
     
     @NotBlank
     private String model;
 
-    @NotBlank
+    @NotNull
     private LocalDateTime fabricationYear;
        
-    @NotBlank
+    @NotNull
     private Double engineLiters;
     
-    @NotBlank
+    @NotNull
     private FuelType fuel;
     
     private List<Valuation> valuations;
