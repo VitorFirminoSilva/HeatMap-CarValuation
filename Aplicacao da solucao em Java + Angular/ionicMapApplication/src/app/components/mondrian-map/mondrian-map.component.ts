@@ -25,9 +25,7 @@ export class MondrianMapComponent implements OnInit, OnChanges {
     
     public carValues: ValueCarChange[] = [];
 
-    constructor(private loadingCtrl: LoadingController, 
-                private alertController: AlertController,
-            ) {
+    constructor(private loadingCtrl: LoadingController ) {
     }
 
     ngOnInit() {

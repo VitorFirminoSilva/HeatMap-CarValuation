@@ -10,5 +10,5 @@
   <div id="container">
     <app-mondrian-map (eventEmitter)="pushSelected($event)" [carList]="carList"></app-mondrian-map>
   </div>
-  <app-menubar></app-menubar> 
+  <app-menubar (eventEmitter)="pushModify($event)" [brandList]="brandList"></app-menubar> 
 </ion-content>

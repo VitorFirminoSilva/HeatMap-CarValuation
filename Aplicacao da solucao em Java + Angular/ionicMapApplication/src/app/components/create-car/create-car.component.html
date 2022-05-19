@@ -12,7 +12,21 @@
   <form [formGroup]="form" (ngSubmit)="submitForm()">
 
     <ion-item>
-      <ion-label position="floating">Model</ion-label>
+      <ion-label>Brand: </ion-label>
+      <select [compareWith]="compareWith" formControlName="brandId" ngDefaultControl>
+        <option value="empty">Select Brand...</option>
+        <option *ngFor="let brand of brandList" [ngValue]="brand">{{brand.brandName}}</option>
+      </select>
+    </ion-item>
+
+    <span
+      *ngIf="(form.get('model').dirty || form.get('model').touched) && form.controls.model.errors?.required">
+      Brand is required.
+    </span>
+
+
+    <ion-item>
+      <ion-label position="floating">Model: </ion-label>
       <ion-input type="text" formControlName="model" ngDefaultControl></ion-input>
     </ion-item>
     <span
@@ -21,27 +35,44 @@
     </span>
 
     <ion-item>
-      <ion-label>Fabricate Year</ion-label>
+      <ion-label>Fabricate Year: </ion-label>
       <ion-input type="date" min="1900-01-01" max="2022-04-30" formControlName="fabricationYear" ngDefaultControl></ion-input>
     </ion-item>
     <span
       *ngIf="(form.get('fabricationYear').dirty || form.get('fabricationYear').touched) && form.controls.fabricationYear.errors?.required">
       Fabricate Year is required.
     </span>
-
+    
     <ion-item>
-      <ion-label>Engine Liters</ion-label>
+      <ion-label>Engine Liters: </ion-label>
       <ion-input type="number" min="1.0" max="10.0" formControlName="engineLiters" ngDefaultControl></ion-input>
     </ion-item>
+
     <span
       *ngIf="(form.get('engineLiters').dirty || form.get('engineLiters').touched) && form.controls.engineLiters.errors?.required">
       Engine Liters is required.
     </span>
 
+    <ion-item>
+      <ion-label>Fuel: </ion-label>
+      <select formControlName="fuel" ngDefaultControl>
+        <option value="empty">Select Fuel...</option>
+        <option value="GASOLINE">Gasoline</option>
+        <option value="ALCOHOL">Alcohol</option>
+        <option value="DIESEL">Diesel</option>
+        <option value="ELECTRIC">Electric</option>
+      </select>
+    </ion-item>
+
+    <span
+      *ngIf="(form.get('model').dirty || form.get('model').touched) && form.controls.model.errors?.required">
+      Brand is required.
+    </span>
+
     <hr>
 
     <ion-item>
-      <ion-label>Valuation Date 1</ion-label>
+      <ion-label>Valuation Date 1: </ion-label>
       <ion-input type="date" min="1900-01-01" max="2022-04-30" formControlName="dateRef1" ngDefaultControl></ion-input>
     </ion-item>
     <span
@@ -50,7 +81,7 @@
     </span>
 
     <ion-item>
-      <ion-label>Value 1</ion-label>
+      <ion-label>Value 1: </ion-label>
       <ion-input type="number" min="1000.0" max="1000000.0" formControlName="value1" ngDefaultControl></ion-input>
     </ion-item>
     <span

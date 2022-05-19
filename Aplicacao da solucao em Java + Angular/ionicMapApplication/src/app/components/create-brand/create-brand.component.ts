@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit} from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { AlertController, LoadingController, ModalController } from '@ionic/angular';
 import { AccessApiService } from 'src/app/services/access-api.service';
@@ -33,7 +33,8 @@ export class CreateBrandComponent implements OnInit {
 
   dismissModal() {
     this.modalController.dismiss({
-      'dismissed': true
+      'dismissed': true,
+      'newBrand': false,
     });
   }
 
@@ -62,7 +63,11 @@ export class CreateBrandComponent implements OnInit {
 
     await this.accessApi.createBrand(brand);
     this.loadingCtrl.dismiss();
-    this.dismissModal();
+
+    this.modalController.dismiss({
+      'dismissed': true,
+      'newBrand': true,
+    });
   }
 
   async presentAlert(msg: string, type: string) {
