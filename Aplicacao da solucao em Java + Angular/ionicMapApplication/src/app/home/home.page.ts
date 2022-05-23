@@ -43,8 +43,8 @@ export class HomePage implements OnInit{
     await modal.present();
     await modal.onDidDismiss().then(
       (dataReturn) => {
-        //if(dataReturn.data.deleteCar)
-          ///Enter Function
+        if(dataReturn.data.deleteCar)
+          this.getCarList();
       }
     );
   }

@@ -9,10 +9,16 @@ interface Brand{
   description?: string;
 }
 
-interface Valuation{
+/*interface Valuation{
   dateValuation?: Date;
   value?: number;
   car?: {};
+}*/
+
+interface Valuation{
+  dateValuation?: Date;
+  value?: number;
+  carId?: number;
 }
 
 interface Car{
@@ -103,8 +109,8 @@ export class CreateCarComponent implements OnInit {
 
     const carTemp = await this.cars.filter(element => { return  (element.model === car.model)}); 
 
-    val1.car  = carTemp[0];
-    val2.car  = carTemp[0];
+    val1.carId  = carTemp[0].id;
+    val2.carId  = carTemp[0].id;
 
     await this.accessApi.createValuation(val1);
     await this.accessApi.createValuation(val2);
