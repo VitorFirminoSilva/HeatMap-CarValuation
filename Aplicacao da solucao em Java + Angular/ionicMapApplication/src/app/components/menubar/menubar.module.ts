@@ -4,6 +4,7 @@ import { MenubarComponent } from './menubar.component';
 import { IonicModule } from '@ionic/angular';
 import { CreateBrandModule } from '../create-brand/create-brand.module';
 import { CreateCarModule } from '../create-car/create-car.module';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 
@@ -13,7 +14,9 @@ import { CreateCarModule } from '../create-car/create-car.module';
     CommonModule,
     IonicModule,
     CreateBrandModule,
-    CreateCarModule
+    CreateCarModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   exports:[MenubarComponent]
   

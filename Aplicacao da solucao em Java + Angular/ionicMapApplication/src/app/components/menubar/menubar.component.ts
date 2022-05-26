@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { AccessApiService } from 'src/app/services/access-api.service';
 import { CreateBrandComponent } from '../create-brand/create-brand.component';
@@ -11,12 +11,13 @@ import { CreateCarComponent } from '../create-car/create-car.component';
 })
 export class MenubarComponent implements OnInit {
 
-  private brands = {} as any;
-  
+  @Input() brandList = [];
+  @Output() eventEmitter = new EventEmitter<any>();
 
-  constructor(private modalController: ModalController, private accessApi: AccessApiService) { }
+  constructor( private modalController: ModalController ) { }
 
   ngOnInit() {}
+  
 
   create_brand(){
     this.modalBrand();
@@ -24,10 +25,6 @@ export class MenubarComponent implements OnInit {
 
   create_car(){
     this.modalCar();
-  }
-
-  private async getBrands(){
-    this.brands = await this.accessApi.getListBrands(); 
   }
 
   public async modalBrand() {
@@ -39,8 +36,14 @@ export class MenubarComponent implements OnInit {
         'modalController': this.modalController,
       }
       
-    })
+    });
     await modal.present();
+    await modal.onDidDismiss().then(
+      (data) => {
+        if(data.data.newBrand)
+          this.eventEmitter.emit({"event": "New_Brand", "create": true});
+      }
+    );
   }
 
   public async modalCar() {
@@ -50,11 +53,17 @@ export class MenubarComponent implements OnInit {
       mode: "md",
       componentProps:{
         'modalController': this.modalController,
-        'brandList': this.brands,
+        'brandList': this.brandList,
       }
       
-    })
-    await modal.present();
+    });
+    await modal.present(); 
+    await modal.onDidDismiss().then(
+      (data) => {
+        if(data.data.newCar)
+          this.eventEmitter.emit({"event": "New_Car", "create": true});
+      }
+    );
   }
 
 }

@@ -1,9 +1,7 @@
-import { Component, ContentChildren, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit} from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { AlertController, LoadingController, ModalController } from '@ionic/angular';
 import { AccessApiService } from 'src/app/services/access-api.service';
-import { MondrianMapComponent } from '../mondrian-map/mondrian-map.component';
 
 interface Brand{
   id?: number;
@@ -37,31 +35,70 @@ export class CreateCarComponent implements OnInit {
   public cars = {} as any;
 
   @Input() modalController: ModalController;
-  @Input() brandList: any[];
+  @Input() public brandList = [];
 
-  constructor(  private router: Router,
+  constructor(  
                 private formBuilder: FormBuilder, 
                 public alertController: AlertController,
-                public accessApi: AccessApiService, private loadingCtrl: LoadingController ) { 
-    this.form = this.formBuilder.group({
+                public accessApi: AccessApiService, 
+                private loadingCtrl: LoadingController 
+              ) { 
+    
+  }
 
-      model: new FormControl('', Validators.required),
-      fabricationYear: new FormControl('', Validators.required),
-      engineLiters: new FormControl('', Validators.required),
-      dateRef1: new FormControl('', Validators.required),
-      value1:  new FormControl('', Validators.required),
-      dateRef2: new FormControl('', Validators.required),
-      value2:  new FormControl('', Validators.required),
+  ngOnInit() {
+    this.form = this.formBuilder.group({
+      brandId: ['empty', Validators.required],
+      model: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(60)]],
+      fabricationYear: ['', Validators.required],
+      engineLiters: ['', Validators.required],
+      fuel: ['empty',  Validators.required],
+      dateRef1: ['', Validators.required],
+      value1:  ['', Validators.required],
+      dateRef2: ['', Validators.required],
+      value2:  ['', Validators.required],
     });
   }
 
-  ngOnInit() {}
+  validation_messages = {
+    'brandId': [
+      { type: 'required', message: 'Brand is required.' },
+    ],
+    'model': [
+      { type: 'required', message: 'Model is required.' },
+      { type: 'minlength', message: 'Model must be at least 2 characters long.' },
+      { type: 'maxlength', message: 'Model must have a maximum of 60 characters' }
+    ],
+    'fabricationYear': [
+      { type: 'required', message: 'Fabrication Year is required.' },
+    ],
+    'engineLiters': [
+      { type: 'required', message: 'Engine Liters is required.' },
+    ],
+    'fuel': [
+      { type: 'required', message: 'Fuel is required.' },
+    ],
+    'dateRef1': [
+      { type: 'required', message: 'Date Reference is required.' },
+    ],
+    'value1': [
+      { type: 'required', message: 'Value is required.' },
+    ],
+    'dateRef2': [
+      { type: 'required', message: 'Date Reference is required.' },
+    ],
+    'value2': [
+      { type: 'required', message: 'Value is required.' },
+    ],
+  }
 
   dismissModal() {
     this.modalController.dismiss({
-      'dismissed': true
+      'dismissed': true,
+      'newCar': false,
     });
   }
+
 
   public async submitForm() {
 
@@ -74,11 +111,13 @@ export class CreateCarComponent implements OnInit {
 
     if(this.form.status === "INVALID"){
       this.presentAlert("Dados São Requeridos.", "ERRO");
+      await loading.dismiss();
       return;
     }
+
+    
     const val1: Valuation = {} as any;
     const val2: Valuation = {} as any;
-
    
     val1.dateValuation= this.form.value.dateRef1;
     val1.value = this.form.value.value1;
@@ -87,33 +126,28 @@ export class CreateCarComponent implements OnInit {
    
   
     const car: Car = {} as any;
-    car.brand = {"id": 2, "brandName": "Honda", "description": "Montadora japonesa"};
-    car.engineLiters = this.form.value.engineLiters;
+    car.brand = this.form.value.brandId;
+    car.engineLiters = parseFloat(this.form.value.engineLiters);
     car.fabricationYear = this.form.value.fabricationYear;
-    car.fuel = "GASOLINE";
+    car.fuel = this.form.value.fuel;
     car.model = this.form.value.model;
 
-    //await this.accessApi.createCar(car);
-    //this.cars = await this.accessApi.getListCars();
+    await this.accessApi.createCar(car);
+    this.cars = await this.accessApi.getListCars();
 
-    //const carTemp: CarNotValuations = await this.cars.filter(element => { return  (element.model === car.model)}); 
+    const carTemp = await this.cars.filter(element => { return  (element.model === car.model)}); 
 
-    //val1.car  = carTemp[0];
-    //val2.car  = carTemp[0];
+    val1.car  = carTemp[0];
+    val2.car  = carTemp[0];
 
-    //await this.accessApi.createValuation(val1);
-    //await this.accessApi.createValuation(val2);
-
+    await this.accessApi.createValuation(val1);
+    await this.accessApi.createValuation(val2);
     await loading.dismiss();
-    this.reloadCurrentRoute();
-    this.dismissModal();
-  }
-
-  reloadCurrentRoute() {
-    this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
-        this.router.navigate(["/home"]);
+    this.modalController.dismiss({
+      'dismissed': true,
+      'newCar': true,
     });
-}
+  }
 
   async presentAlert(msg: string, type: string) {
     const alert = await this.alertController.create({
@@ -123,5 +157,33 @@ export class CreateCarComponent implements OnInit {
     });
 
     await alert.present();
+  }
+
+  compareWith(o1: Brand, o2: Brand) {
+    return o1 && o2 ? o1.id === o2.id : o1 === o2;
+  }
+
+
+  verifyTouchedANDValid(field: any){
+    return this.form.get(field).invalid && (this.form.get(field).dirty || this.form.get(field).touched);
+  }
+
+  applyErrors(field: string){
+
+    let error = this.form.get(field).errors;
+
+    if(error.required){
+      return this.validation_messages[field][0].message;
+    }
+
+    if(error.minlength){
+      return this.validation_messages[field][1].message;
+    }
+
+   if(error.maxlength){
+      return this.validation_messages[field][2].message;
+    }
+
+    return "Application Error: List errors this compoment not found!!";
   }
 }

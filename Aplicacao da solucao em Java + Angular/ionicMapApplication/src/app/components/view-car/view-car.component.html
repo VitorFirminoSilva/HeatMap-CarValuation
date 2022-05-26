@@ -1,0 +1,57 @@
+<ion-header translucent>
+    <ion-toolbar>
+      <ion-title>Car: {{infoCar.model}}</ion-title>
+      <ion-buttons slot="end">
+        <ion-button (click)="dismissModal()">Close</ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+  
+  <ion-content>
+      <ion-item>
+        <ion-label>Brand: </ion-label>
+        <ion-input type="text" readonly>{{infoCar.brand.brandName}}</ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>Description: </ion-label>
+        <ion-input type="text" readonly>{{infoCar.brand.description}}</ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Fabrication Year: </ion-label>
+        <ion-input type="text" readonly>{{infoCar.fabricationYear}}</ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>Engine Liters: </ion-label>
+        <ion-input type="text" readonly>{{infoCar.engineLiters}}</ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Fuel: </ion-label>
+        <ion-input type="text" readonly>{{infoCar.fuel}}</ion-input>
+      </ion-item>
+  
+      <br>
+      <h3>Valuations</h3>
+  
+      <ion-item>
+        <ion-label>Valuation Date 1: </ion-label>
+        <ion-input type="text" readonly>{{infoCar.valuations[0].dateValuation}}</ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>Value 1: </ion-label>
+        <ion-input type="text" readonly>{{infoCar.valuations[0].value}}</ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Valuation Date 2: </ion-label>
+        <ion-input type="text" readonly>{{infoCar.valuations[1].dateValuation}}</ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>Value 2: </ion-label>
+        <ion-input type="text" readonly>{{infoCar.valuations[1].value}}</ion-input>
+      </ion-item>
+
+      <ion-button expand="block"   (click)="deleteCar()" color="danger">Delete this car</ion-button>
+  </ion-content>
+  

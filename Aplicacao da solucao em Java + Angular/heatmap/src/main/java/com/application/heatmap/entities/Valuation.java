@@ -3,10 +3,7 @@ package com.application.heatmap.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import javax.persistence.*;
 
@@ -20,8 +17,7 @@ public class Valuation implements Serializable{
     private Long id;
 
     @Column(name = "dateValuation", nullable = false)
-    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
-    private Date dateValuation;
+    private LocalDateTime dateValuation;
     
     @Column(name = "value", nullable = false)
     private Double value;
@@ -33,7 +29,7 @@ public class Valuation implements Serializable{
     
     public Valuation(){}
 
-    public Valuation(Long id, Date dateValuation, Double value, Car car) {
+    public Valuation(Long id, LocalDateTime dateValuation, Double value, Car car) {
         this.id = id;
         this.dateValuation = dateValuation;
         this.value = value;
@@ -48,11 +44,11 @@ public class Valuation implements Serializable{
         this.id = id;
     }
 
-    public Date getDateValuation() {
+    public LocalDateTime getDateValuation() {
         return dateValuation;
     }
 
-    public void setDateValuation(Date dateValuation) {
+    public void setDateValuation(LocalDateTime dateValuation) {
         this.dateValuation = dateValuation;
     }
 
@@ -103,7 +99,7 @@ public class Valuation implements Serializable{
         return "Valuation{dateValuation=" + dateValuation + ", value=" + value + ", car=" + car + '}';
     }
  
-    public Integer findGreaterYear(List<Valuation> valuations){
+    /*public Integer findGreaterYear(List<Valuation> valuations){
         int greaterYear = 0;
         int tempYear;
         Calendar cal = Calendar.getInstance();
@@ -118,7 +114,7 @@ public class Valuation implements Serializable{
         }
 
         return greaterYear;
-    }
+    }*/
  
 
 }

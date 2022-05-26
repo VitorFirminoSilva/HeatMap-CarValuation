@@ -12,50 +12,81 @@
   <form [formGroup]="form" (ngSubmit)="submitForm()">
 
     <ion-item>
-      <ion-label position="floating">Model</ion-label>
+      <ion-label>Brand: </ion-label>
+      <select [compareWith]="compareWith" formControlName="brandId" ngDefaultControl>
+        <option value="empty">Select Brand...</option>
+        <option *ngFor="let brand of brandList" [ngValue]="brand">{{brand.brandName}}</option>
+      </select>
+    </ion-item>
+
+    <span
+      *ngIf="verifyTouchedANDValid('brandId')">
+      {{applyErrors('brandid')}}
+    </span>
+
+
+    <ion-item>
+      <ion-label position="floating">Model: </ion-label>
       <ion-input type="text" formControlName="model" ngDefaultControl></ion-input>
     </ion-item>
     <span
-      *ngIf="(form.get('model').dirty || form.get('model').touched) && form.controls.model.errors?.required">
-      Model is required.
+      *ngIf="verifyTouchedANDValid('model')">
+      {{applyErrors('model')}}
     </span>
 
     <ion-item>
-      <ion-label>Fabricate Year</ion-label>
+      <ion-label>Fabricate Year: </ion-label>
       <ion-input type="date" min="1900-01-01" max="2022-04-30" formControlName="fabricationYear" ngDefaultControl></ion-input>
     </ion-item>
     <span
-      *ngIf="(form.get('fabricationYear').dirty || form.get('fabricationYear').touched) && form.controls.fabricationYear.errors?.required">
-      Fabricate Year is required.
+      *ngIf="verifyTouchedANDValid('fabricationYear')">
+      {{applyErrors('fabricationYear')}}
+    </span>
+    
+    <ion-item>
+      <ion-label>Engine Liters: </ion-label>
+      <ion-input type="number" min="1.0" max="10.0" formControlName="engineLiters" ngDefaultControl></ion-input>
+    </ion-item>
+
+    <span
+      *ngIf="verifyTouchedANDValid('engineLiters')">
+      {{applyErrors('engineLiters')}}
     </span>
 
     <ion-item>
-      <ion-label>Engine Liters</ion-label>
-      <ion-input type="number" min="1.0" max="10.0" formControlName="engineLiters" ngDefaultControl></ion-input>
+      <ion-label>Fuel: </ion-label>
+      <select formControlName="fuel" ngDefaultControl>
+        <option value="empty">Select Fuel...</option>
+        <option value="GASOLINE">Gasoline</option>
+        <option value="ALCOHOL">Alcohol</option>
+        <option value="DIESEL">Diesel</option>
+        <option value="ELECTRIC">Electric</option>
+      </select>
     </ion-item>
+
     <span
-      *ngIf="(form.get('engineLiters').dirty || form.get('engineLiters').touched) && form.controls.engineLiters.errors?.required">
-      Engine Liters is required.
+      *ngIf="verifyTouchedANDValid('fuel')">
+      {{applyErrors('fuel')}}
     </span>
 
     <hr>
 
     <ion-item>
-      <ion-label>Valuation Date 1</ion-label>
+      <ion-label>Valuation Date 1: </ion-label>
       <ion-input type="date" min="1900-01-01" max="2022-04-30" formControlName="dateRef1" ngDefaultControl></ion-input>
     </ion-item>
     <span
-      *ngIf="(form.get('dateRef1').dirty || form.get('dateRef1').touched) && form.controls.dateRef1.errors?.required">
-      Valuation Date 1 is required.
+      *ngIf="verifyTouchedANDValid('dateRef1')">
+      {{applyErrors('dateRef1')}}
     </span>
 
     <ion-item>
-      <ion-label>Value 1</ion-label>
+      <ion-label>Value 1: </ion-label>
       <ion-input type="number" min="1000.0" max="1000000.0" formControlName="value1" ngDefaultControl></ion-input>
     </ion-item>
     <span
-      *ngIf="(form.get('value1').dirty || form.get('value1').touched) && form.controls.value1.errors?.required">
-      Value 1 is required.
+      *ngIf="verifyTouchedANDValid('value1')">
+      {{applyErrors('value1')}}
     </span>
 
 
@@ -66,8 +97,8 @@
       <ion-input type="date" min="1900-01-01" max="2022-04-30" formControlName="dateRef2" ngDefaultControl></ion-input>
     </ion-item>
     <span
-      *ngIf="(form.get('dateRef2').dirty || form.get('dateRef2').touched) && form.controls.dateRef2.errors?.required">
-      Valuation Date 2 is required.
+      *ngIf="verifyTouchedANDValid('dateRef2')">
+      {{applyErrors('dateRef2')}}
     </span>
 
     <ion-item>
@@ -75,11 +106,11 @@
       <ion-input type="number" min="1000.0" max="1000000.0" formControlName="value2" ngDefaultControl></ion-input>
     </ion-item>
     <span
-      *ngIf="(form.get('value2').dirty || form.get('value2').touched) && form.controls.value2.errors?.required">
-      Value 2 is required.
+      *ngIf="verifyTouchedANDValid('value2')">
+      {{applyErrors('value2')}}
     </span>
 
 
-    <ion-button expand="block" color="primary" type="submit" >Save</ion-button>
+    <ion-button expand="block" color="primary" type="submit">Save</ion-button>
   </form>
 </ion-content>

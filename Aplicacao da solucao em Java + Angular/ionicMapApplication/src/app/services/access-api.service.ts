@@ -34,7 +34,7 @@ export class AccessApiService {
   constructor(  private http: HttpClient ) { }
 
   public async getListCars() {
-    return new Promise(resolve => {
+    return await new Promise(resolve => {
       setTimeout(() => {
         this.http.get(`${environment.serverUrl}/cars?_embed=valuations`).subscribe(
           (data: any) => {     

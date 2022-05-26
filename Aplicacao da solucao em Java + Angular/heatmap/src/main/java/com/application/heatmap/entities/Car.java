@@ -2,6 +2,7 @@
 package com.application.heatmap.entities;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -9,9 +10,7 @@ import javax.persistence.*;
 
 
 @Entity
-@Table(name = "car", uniqueConstraints = {
-    @UniqueConstraint(name = "unique_carModel", columnNames = "model"),
-})
+@Table(name = "car")
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Car implements Serializable{
     private static final long serialVersionUID = 1L;
@@ -24,13 +23,12 @@ public class Car implements Serializable{
     @JoinColumn(name = "brand", nullable = false, referencedColumnName = "id")
     private Brand brand;
     
-    @Column(nullable = false)
+    @Column(unique = true, nullable = false)
     private String model;
     
     @Column(nullable = false)
-    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
-    private Date fabricationYear;
-    
+    private LocalDateTime fabricationYear;
+       
     @Column(nullable = false)
     private Double engineLiters;
     
@@ -38,12 +36,12 @@ public class Car implements Serializable{
     @Enumerated(EnumType.STRING)
     private FuelType fuel;
 
-    @OneToMany(mappedBy = "car", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "car", cascade = CascadeType.REMOVE)
     private List<Valuation> valuations;
 
     public Car(){}
 
-    public Car(Long id, Brand brand, String model, Date fabricationYear, Double engineLiters, FuelType fuel, List<Valuation> valuations) {
+    public Car(Long id, Brand brand, String model, LocalDateTime fabricationYear, Double engineLiters, FuelType fuel, List<Valuation> valuations) {
         this.id = id;
         this.brand = brand;
         this.model = model;
@@ -77,11 +75,11 @@ public class Car implements Serializable{
         this.model = model;
     }
 
-    public Date getFabricationYear() {
+    public LocalDateTime getFabricationYear() {
         return fabricationYear;
     }
 
-    public void setFabricationYear(Date fabricationYear) {
+    public void setFabricationYear(LocalDateTime fabricationYear) {
         this.fabricationYear = fabricationYear;
     }
 
