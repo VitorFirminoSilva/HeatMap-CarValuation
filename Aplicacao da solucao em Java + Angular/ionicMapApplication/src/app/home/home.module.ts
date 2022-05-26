@@ -12,6 +12,7 @@ import { MenubarModule } from '../components/menubar/menubar.module';
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     IonicModule,
     HomePageRoutingModule,
     MenubarModule,

@@ -22,14 +22,30 @@ export class CreateBrandComponent implements OnInit {
   constructor(  private formBuilder: FormBuilder, 
                 public alertController: AlertController,
                 public accessApi: AccessApiService,
-                private loadingCtrl: LoadingController ) { 
-    this.form = this.formBuilder.group({
-      brandName: new FormControl('', Validators.required),
-      description: new FormControl('', Validators.required),
-    })
+                private loadingCtrl: LoadingController 
+              ) { 
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.form = this.formBuilder.group({
+      brandName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(60)]],
+      description: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(2500)]]
+    });
+  }
+
+
+  validation_messages = {
+    'brandName': [
+      { type: 'required', message: 'Brand name is required.' },
+      { type: 'minlength', message: 'Brand name must be at least 2 characters long.' },
+      { type: 'maxlength', message: 'Brand name must have a maximum of 60 characters' }
+    ],
+    'description': [
+      { type: 'required', message: 'Description is required.' },
+      { type: 'minlength', message: 'Description must be at least 10 characters long.' },
+      { type: 'maxlength', message: 'Description must have a maximum of 60 characters' }
+    ],
+  }
 
   dismissModal() {
     this.modalController.dismiss({
@@ -40,6 +56,10 @@ export class CreateBrandComponent implements OnInit {
 
   public async submitForm() {
 
+    if(!this.form.valid){
+      return;
+    }
+    
     const loading = await this.loadingCtrl.create({
       message: "Creating...",
     });
@@ -81,5 +101,26 @@ export class CreateBrandComponent implements OnInit {
   }
 
 
+  verifyTouchedANDValid(field: any){
+    return this.form.get(field).invalid && (this.form.get(field).dirty || this.form.get(field).touched);
+  }
 
+  applyErrors(field: string){
+
+    let error = this.form.get(field).errors;
+
+    if(error.required){
+      return this.validation_messages[field][0].message;
+    }
+
+    if(error.minlength){
+      return this.validation_messages[field][1].message;
+    }
+
+   if(error.maxlength){
+      return this.validation_messages[field][2].message;
+    }
+
+    return "Application Error: List errors this compoment not found!!";
+  }
 }

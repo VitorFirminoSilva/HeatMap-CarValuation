@@ -15,21 +15,18 @@
       <ion-label position="floating">Brand Name</ion-label>
       <ion-input type="text" formControlName="brandName" ngDefaultControl></ion-input>
     </ion-item>
-    <span
-      *ngIf="(form.get('brandName').dirty || form.get('brandName').touched) && form.controls.brandName.errors?.required">
-      Brand Name is required.
+    <span *ngIf="verifyTouchedANDValid('brandName')">
+      {{applyErrors('brandName')}}
     </span>
 
     <ion-item>
       <ion-label position="floating">Description</ion-label>
       <ion-input type="text" formControlName="description" ngDefaultControl></ion-input>
     </ion-item>
-    <span
-
-      *ngIf="(form.get('description').dirty || form.get('description').touched) && form.controls.description.errors?.required">
-      Description is required.
+    <span *ngIf="verifyTouchedANDValid('description')">
+      {{applyErrors('description')}}
     </span>
 
-    <ion-button expand="block" color="primary" type="submit" >Save</ion-button>
+    <ion-button expand="block" color="primary" type="submit">Save</ion-button>
   </form>
 </ion-content>

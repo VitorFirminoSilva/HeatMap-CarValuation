@@ -9,16 +9,10 @@ interface Brand{
   description?: string;
 }
 
-/*interface Valuation{
-  dateValuation?: Date;
-  value?: number;
-  car?: {};
-}*/
-
 interface Valuation{
   dateValuation?: Date;
   value?: number;
-  carId?: number;
+  car?: {};
 }
 
 interface Car{
@@ -49,20 +43,54 @@ export class CreateCarComponent implements OnInit {
                 public accessApi: AccessApiService, 
                 private loadingCtrl: LoadingController 
               ) { 
+    
+  }
+
+  ngOnInit() {
     this.form = this.formBuilder.group({
-      brandId: new FormControl('empty', Validators.required),
-      model: new FormControl('', Validators.required),
-      fabricationYear: new FormControl('', Validators.required),
-      engineLiters: new FormControl('', Validators.required),
-      fuel: new FormControl('empty',  Validators.required),
-      dateRef1: new FormControl('', Validators.required),
-      value1:  new FormControl('', Validators.required),
-      dateRef2: new FormControl('', Validators.required),
-      value2:  new FormControl('', Validators.required),
+      brandId: ['empty', Validators.required],
+      model: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(60)]],
+      fabricationYear: ['', Validators.required],
+      engineLiters: ['', Validators.required],
+      fuel: ['empty',  Validators.required],
+      dateRef1: ['', Validators.required],
+      value1:  ['', Validators.required],
+      dateRef2: ['', Validators.required],
+      value2:  ['', Validators.required],
     });
   }
 
-  ngOnInit() {}
+  validation_messages = {
+    'brandId': [
+      { type: 'required', message: 'Brand is required.' },
+    ],
+    'model': [
+      { type: 'required', message: 'Model is required.' },
+      { type: 'minlength', message: 'Model must be at least 2 characters long.' },
+      { type: 'maxlength', message: 'Model must have a maximum of 60 characters' }
+    ],
+    'fabricationYear': [
+      { type: 'required', message: 'Fabrication Year is required.' },
+    ],
+    'engineLiters': [
+      { type: 'required', message: 'Engine Liters is required.' },
+    ],
+    'fuel': [
+      { type: 'required', message: 'Fuel is required.' },
+    ],
+    'dateRef1': [
+      { type: 'required', message: 'Date Reference is required.' },
+    ],
+    'value1': [
+      { type: 'required', message: 'Value is required.' },
+    ],
+    'dateRef2': [
+      { type: 'required', message: 'Date Reference is required.' },
+    ],
+    'value2': [
+      { type: 'required', message: 'Value is required.' },
+    ],
+  }
 
   dismissModal() {
     this.modalController.dismiss({
@@ -109,8 +137,8 @@ export class CreateCarComponent implements OnInit {
 
     const carTemp = await this.cars.filter(element => { return  (element.model === car.model)}); 
 
-    val1.carId  = carTemp[0].id;
-    val2.carId  = carTemp[0].id;
+    val1.car  = carTemp[0];
+    val2.car  = carTemp[0];
 
     await this.accessApi.createValuation(val1);
     await this.accessApi.createValuation(val2);
@@ -133,5 +161,29 @@ export class CreateCarComponent implements OnInit {
 
   compareWith(o1: Brand, o2: Brand) {
     return o1 && o2 ? o1.id === o2.id : o1 === o2;
+  }
+
+
+  verifyTouchedANDValid(field: any){
+    return this.form.get(field).invalid && (this.form.get(field).dirty || this.form.get(field).touched);
+  }
+
+  applyErrors(field: string){
+
+    let error = this.form.get(field).errors;
+
+    if(error.required){
+      return this.validation_messages[field][0].message;
+    }
+
+    if(error.minlength){
+      return this.validation_messages[field][1].message;
+    }
+
+   if(error.maxlength){
+      return this.validation_messages[field][2].message;
+    }
+
+    return "Application Error: List errors this compoment not found!!";
   }
 }
